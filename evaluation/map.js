@@ -24,23 +24,33 @@ var metro = L.geoJSON(ligne_metro, {
 
 // Station auto-partage : Create a icon to use with a GeoJSON (Auto.js) layer instead of the default blue marker. 
 
-// replace Leaflet's default blue marker with my icon
-function createCustomIcon (feature, latlng) {
-  let myIcon = L.icon({
+// Icone pour mettre en valeur
+var IconStyleTwo = L.icon({
+    iconUrl: 'car_icon.png',
+    iconSize:     [25, 38], // width and height of the image in pixels
+    shadowSize:   [35, 20], // width, height of optional shadow image
+    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+  })
+
+// Icone de base
+var IconStyleOne = L.icon({
     iconUrl: 'car_icon.png',
     iconSize:     [17, 25], // width and height of the image in pixels
     shadowSize:   [35, 20], // width, height of optional shadow image
     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
   })
-  return L.marker(latlng, { icon: myIcon })
+
+// replace Leaflet's default blue marker with my icon
+function createCustomIcon (feature, latlng) {
+  return L.marker(latlng, { icon: IconStyleOne })
 }
 
 
 // Mettre un buffer puis l'enlever au survol de la souris
 function buffer (feature) {
   buf = L.circle(feature.latlng,300,{
-          color: "#ECD444",
-          fillColor: "#F4E285"
+          color: "#000000",
+          fillColor: "#000000"
       }).addTo(map);
 }
 
@@ -63,7 +73,13 @@ function debuffer (feature) {
 function onEachFeature(feature, layer) {
         layer.bindPopup("<strong> Adresse </strong>: "+feature.properties.adresse);
         layer.on({mouseover: buffer});
+        layer.on("mouseover",function(e){
+                layer.setIcon(IconStyleTwo)
+            });
         layer.on({mouseout: debuffer});
+        layer.on("mouseout",function(e){
+        layer.setIcon(IconStyleOne)
+        });
 };  
 
 
@@ -96,7 +112,31 @@ var station_layer =L.geoJSON(station_auto,{
 
 // ----------- TAUX DE CHOMAGE PAR IRIS -------------------
 
-var iris = L.geoJSON(iris);
+
+function getColor(d) {
+    return d > 40 ? '#800026' :
+           d > 30  ? '#BD0026' :
+           d > 22  ? '#E31A1C' :
+           d > 16.5  ? '#FC4E2A' :
+           d > 12.6 ? '#FD8D3C' :
+           d > 10  ? '#FEB24C' :
+           d > 3.4   ? '#FED976' :
+                      '#FFEDA0';
+}
+
+
+function style(feature) {
+    return {
+        fillColor: getColor(feature.properties.tchom),
+        weight: 1,
+        opacity: 1,
+        color: 'white',
+        fillOpacity: 0.4
+    };
+}
+
+
+var iris = L.geoJSON(iris, {style: style});
 console.log(iris);
 iris.addTo(map);
 
