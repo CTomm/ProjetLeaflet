@@ -20,7 +20,16 @@ var metro = L.geoJSON(ligne_metro, {
     }
 }).addTo(map);
 
-
+for (i in ligne_metro.features){
+  if (ligne_metro.features[i].properties.sens == 'Aller' ){
+    metro = ligne_metro.features[i].geometry.coordinates[0];
+    for (j in metro){
+      metro[j]=metro[j].reverse()
+    }
+    animatedMarker = L.animatedMarker(ligne_metro.features[i].geometry.coordinates[0]);
+    map.addLayer(animatedMarker);
+  }
+}
 
 // Station auto-partage : Create a icon to use with a GeoJSON (Auto.js) layer instead of the default blue marker. 
 
@@ -58,18 +67,6 @@ function debuffer (feature) {
   buf.remove(map);
 }
 
-
-// J'ai simplifié ici un peu ;) -> j'ai mis directement la fonction createCustomIcon dans l'appel du GeoJSON
-// create an options object that specifies which function will called on each feature
-// let myLayerOptions = {
-//   pointToLayer: createCustomIcon
-// };
-
-
-// Station auto-partage : Ajouter pop-up pour afficher l'adresse:
-// probleme : j'arrive pas à faire sortit le champ de "adreee"
-// -> j'ai fait une fonction onEachFeature pour qu'il aille chercher pour chaque entité son adresse
-// j'y ai mis aussi le buffer au survol de la souris
 function onEachFeature(feature, layer) {
         layer.bindPopup("<strong> Adresse </strong>: "+feature.properties.adresse);
         layer.on({mouseover: buffer});
@@ -88,27 +85,6 @@ var station_layer =L.geoJSON(station_auto,{
   onEachFeature: onEachFeature
   }).addTo(map);
 
-
-/// ------------- ANCIENNE FAÇON DE FAIRE LES BUFFERS -------------------
-// c'était pas au survol de la souris donc ça ne répondait pas à la consigne, je le laisse quand même vu que j'ai l'ai débuggé, ça peut toujours servir
-
-// Create a buffer with a GeoJSON layer :
-
-// var buffer300 = [];
-// for (let feature of station_auto["features"]) {
-// 	let coor = feature["geometry"]["coordinates"];
-// 	buffer300.push([coor[1], coor[0]]);
-// }
-
-// //Pour régler le pb j'ai fait un groupe de couche, comme ça tous les buffers sont regroupés
-// var buffer = L.layerGroup()
-
-// for (var i=0 ; i < buffer300.length ; i++) {
-// 	buffer.addLayer(L.circle(buffer300[i],300,{
-// 					color: "#ECD444",
-//           fillColor: "#F4E285"
-//       })).addTo(map);
-// }
 
 // ----------- TAUX DE CHOMAGE PAR IRIS -------------------
 
