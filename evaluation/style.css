@@ -8,8 +8,6 @@ h1{
 
 }
 
-
-
 h2{
 	margin-left: 40px;
 	/*font-family: "Apple Color Emoji", Times, serif;*/
@@ -30,7 +28,23 @@ h2{
 	vertical-align: top; 
 }
 
+.legend {
+    line-height: 20px;
+    color: #555;
+    background-color: White;
+    margin: 20px;
+    opacity: 0.9;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 10px;
+    margin-left: 10px;
+    opacity: 0.7;
+    background-color: White;
 
+}
 
 P {
 margin-left: 40px;
@@ -47,7 +61,5 @@ text-transform: none;
 display: inline-block;
 vertical-align: top;
 }
-
-
 
 

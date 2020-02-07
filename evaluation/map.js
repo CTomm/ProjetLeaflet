@@ -114,14 +114,13 @@ var station_layer =L.geoJSON(station_auto,{
 
 
 function getColor(d) {
-    return d > 40 ? '#800026' :
-           d > 30  ? '#BD0026' :
-           d > 22  ? '#E31A1C' :
-           d > 16.5  ? '#FC4E2A' :
-           d > 12.6 ? '#FD8D3C' :
-           d > 10  ? '#FEB24C' :
-           d > 3.4   ? '#FED976' :
-                      '#FFEDA0';
+    return d > 40 ? '#b10026' :
+           d > 30  ? '#e31a1c' :
+           d > 20  ? '#fc4e2a' :
+           d > 15 ? '#fd8d3c' :
+           d > 10  ? '#feb24c' :
+           d > 5  ? '#fed976' :
+                      '#ffffb2';
 }
 
 
@@ -131,15 +130,36 @@ function style(feature) {
         weight: 1,
         opacity: 1,
         color: 'white',
-        fillOpacity: 0.4
+        fillOpacity: 0.5
     };
 }
 
 
 var iris = L.geoJSON(iris, {style: style});
-console.log(iris);
 iris.addTo(map);
 
+
+// Légende des iris
+var legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function (map) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+        grades = [0, 5, 10, 15, 20, 30, 40],
+        labels = [];
+
+    // loop through our density intervals and generate a label with a colored square for each interval
+    div.innerHTML+="<strong>Taux de chômage : </strong><br>";
+    for (var i = 0; i < grades.length; i++) {
+        div.innerHTML +=
+            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+    }
+
+    return div;
+};
+
+legend.addTo(map);
 
 // Selection de Couches : Afficher des donnees - Gestionnaire de couches :
 
@@ -148,8 +168,8 @@ var baseLayers = {
 };
 
 var overlays = {
-	"ligne de métro" : metro,
-	"Station" : station_layer,
+	"Ligne de métro" : metro,
+	"Stations" : station_layer,
   "Iris" : iris,
 	//"300 metre" : buffer, (pour les anciens buffers -> on met directement le groupe de couches dans le overlays)
 };
