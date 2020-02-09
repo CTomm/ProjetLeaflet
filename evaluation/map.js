@@ -5,7 +5,8 @@ var osmAttrib = 'Map data OpenStreetMap contributors' ;
 var osm=new L.TileLayer(osmUrl, {attribution : osmAttrib}). addTo(map);
 map.setView([45.76, 4.85 ], 12.5);
 
-// Metro : Ajouter les lignes de metro, changer le couleur pour chaque ligne 
+
+// ----------- LIGNES DE METRO -------------------
 
 var metro = L.geoJSON(ligne_metro, {
     style: function(feature) {
@@ -19,36 +20,39 @@ var metro = L.geoJSON(ligne_metro, {
         }}
 }).addTo(map);
 
-// //différents markers animés
-// var Icon = L.icon({
-//     iconUrl: 'loco.svg',
-//     iconSize:     [25, 38], // width and height of the image in pixels
-//     shadowSize:   [35, 20], // width, height of optional shadow image
-//     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-//   })
+// Markers animés le long des lignes
 
-// function addMarker(feature, layer){
-for (i in ligne_metro.features){
-  if (ligne_metro.features[i].properties.sens == 'Aller' ){
-    metro = ligne_metro.features[i].geometry.coordinates[0];
-    for (j in metro){
-      metro[j]=metro[j].reverse()
-    }
-    animatedMarker = L.animatedMarker(ligne_metro.features[i].geometry.coordinates[0], {
+function draw_animated_marker(coords, name){
+  animatedMarker = L.animatedMarker(coords, {
       icon: L.icon({
-        iconUrl: ligne_metro.features[i].properties.ligne + '.svg',
+        iconUrl: name + '.svg',
         iconSize:     [25, 38], // width and height of the image in pixels
         shadowSize:   [35, 20], // width, height of optional shadow image
         popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-    }),
-    autoStart: true,
-    distance: 200,
-    interval: 200
+      }),
+      autoStart: true,
+      distance: 200,
+      interval: 200,
+      onEnd: function() {
+                        map.removeLayer(this);
+                        draw_animated_marker(coords, name)
+                    } // Un nouveau marker animé est créé à la fin pour boucler
     });
     map.addLayer(animatedMarker);
+}
+
+for (i in ligne_metro.features){
+  if (ligne_metro.features[i].properties.sens == 'Aller' ){
+    ligne = ligne_metro.features[i].geometry.coordinates[0];
+    for (j in ligne){
+      ligne[j]=ligne[j].reverse()
+    }
+    draw_animated_marker(ligne_metro.features[i].geometry.coordinates[0], ligne_metro.features[i].properties.ligne)
   }}
 
-// Station auto-partage : Create a icon to use with a GeoJSON (Auto.js) layer instead of the default blue marker. 
+
+// ----------- STATIONS AUTO PARTAGE -------------------
+
 
 // Icone pour mettre en valeur
 var IconStyleTwo = L.icon({
@@ -84,6 +88,8 @@ function debuffer (feature) {
   buf.remove(map);
 }
 
+
+// Appel de toutes les fonctions définies ci-dessus dans le onEachFeature :
 function onEachFeature(feature, layer) {
         layer.bindPopup("<strong> Adresse </strong>: "+feature.properties.adresse);
         layer.on({mouseover: buffer});
@@ -140,8 +146,6 @@ legend.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'info legend'),
         grades = [0, 5, 10, 15, 20, 30, 40],
         labels = [];
-
-    // loop through our density intervals and generate a label with a colored square for each interval
     div.innerHTML+="<strong>Taux de chômage : </strong><br>";
     for (var i = 0; i < grades.length; i++) {
         div.innerHTML +=
@@ -157,14 +161,13 @@ legend.addTo(map);
 // Selection de Couches : Afficher des donnees - Gestionnaire de couches :
 
 var baseLayers = {
-	"OpenStreetMap" : osm
+  "OpenStreetMap" : osm
 };
 
 var overlays = {
-	// "Ligne de métro" : metro
-	"Stations" : station_layer,
+  "Ligne de métro" : metro,
+  "Stations" : station_layer,
     "Iris" : iris
-	//"300 metre" : buffer, (pour les anciens buffers -> on met directement le groupe de couches dans le overlays)
 };
 
 L.control.layers (baseLayers, overlays). addTo(map);
