@@ -161,9 +161,9 @@ var baseLayers = {
 };
 
 var overlays = {
-	"Ligne de métro" : metro,
+	// "Ligne de métro" : metro
 	"Stations" : station_layer,
-    "Iris" : iris,
+    "Iris" : iris
 	//"300 metre" : buffer, (pour les anciens buffers -> on met directement le groupe de couches dans le overlays)
 };
 
@@ -171,6 +171,4 @@ L.control.layers (baseLayers, overlays). addTo(map);
 
 metro.bringToFront()
 station_layer.bringToBack()
-
-
 
