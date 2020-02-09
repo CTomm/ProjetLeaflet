@@ -19,48 +19,34 @@ var metro = L.geoJSON(ligne_metro, {
         }}
 }).addTo(map);
 
-//différents markers animés
-var IconA = L.icon({
-    iconUrl: 'locoA.svg',
-    iconSize:     [25, 38], // width and height of the image in pixels
-    shadowSize:   [35, 20], // width, height of optional shadow image
-    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-  })
-var IconB = L.icon({
-    iconUrl: 'locoB.svg',
-    iconSize:     [25, 38], // width and height of the image in pixels
-    shadowSize:   [35, 20], // width, height of optional shadow image
-    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-  })
-var IconC = L.icon({
-    iconUrl: 'locoC.svg',
-    iconSize:     [25, 38], // width and height of the image in pixels
-    shadowSize:   [35, 20], // width, height of optional shadow image
-    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-  })
-var IconD = L.icon({
-    iconUrl: 'locoD.svg',
-    iconSize:     [25, 38], // width and height of the image in pixels
-    shadowSize:   [35, 20], // width, height of optional shadow image
-    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-  })
-var IconF = L.icon({
-    iconUrl: 'locoF.svg',
-    iconSize:     [25, 38], // width and height of the image in pixels
-    shadowSize:   [35, 20], // width, height of optional shadow image
-    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
-  })
+// //différents markers animés
+// var Icon = L.icon({
+//     iconUrl: 'loco.svg',
+//     iconSize:     [25, 38], // width and height of the image in pixels
+//     shadowSize:   [35, 20], // width, height of optional shadow image
+//     popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+//   })
 
+// function addMarker(feature, layer){
 for (i in ligne_metro.features){
   if (ligne_metro.features[i].properties.sens == 'Aller' ){
     metro = ligne_metro.features[i].geometry.coordinates[0];
     for (j in metro){
       metro[j]=metro[j].reverse()
     }
-    animatedMarker = L.animatedMarker(ligne_metro.features[i].geometry.coordinates[0]);
+    animatedMarker = L.animatedMarker(ligne_metro.features[i].geometry.coordinates[0], {
+      icon: L.icon({
+        iconUrl: ligne_metro.features[i].properties.ligne + '.svg',
+        iconSize:     [25, 38], // width and height of the image in pixels
+        shadowSize:   [35, 20], // width, height of optional shadow image
+        popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+    }),
+    autoStart: true,
+    distance: 200,
+    interval: 200
+    });
     map.addLayer(animatedMarker);
-  }
-}
+  }}
 
 // Station auto-partage : Create a icon to use with a GeoJSON (Auto.js) layer instead of the default blue marker. 
 
@@ -177,7 +163,7 @@ var baseLayers = {
 var overlays = {
 	"Ligne de métro" : metro,
 	"Stations" : station_layer,
-  "Iris" : iris,
+    "Iris" : iris,
 	//"300 metre" : buffer, (pour les anciens buffers -> on met directement le groupe de couches dans le overlays)
 };
 
