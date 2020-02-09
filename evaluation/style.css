@@ -8,6 +8,10 @@ h1{
 
 }
 
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 h2{
 	margin-left: 40px;
 	/*font-family: "Apple Color Emoji", Times, serif;*/
@@ -18,11 +22,14 @@ h2{
 	vertical-align: top;
 }
 
+h3{
+	font-size:15px;
+	color : #A8C7BB;
+}
 
 #map{ 
-	margin-left: 45px;
   border: 10px solid grey ;
-	width : 800px;
+	width : 97vw;
 	height : 500px;
 	display: inline-block;
 	vertical-align: top; 

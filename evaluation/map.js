@@ -16,9 +16,40 @@ var metro = L.geoJSON(ligne_metro, {
             case 'D':   return {color: "#0F8B8D"};
             case 'F1':   return {color: "#8CC7A1"};
             case 'F2':   return {color: "#8CC7A1"};
-        }
-    }
+        }}
 }).addTo(map);
+
+//différents markers animés
+var IconA = L.icon({
+    iconUrl: 'locoA.svg',
+    iconSize:     [25, 38], // width and height of the image in pixels
+    shadowSize:   [35, 20], // width, height of optional shadow image
+    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+  })
+var IconB = L.icon({
+    iconUrl: 'locoB.svg',
+    iconSize:     [25, 38], // width and height of the image in pixels
+    shadowSize:   [35, 20], // width, height of optional shadow image
+    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+  })
+var IconC = L.icon({
+    iconUrl: 'locoC.svg',
+    iconSize:     [25, 38], // width and height of the image in pixels
+    shadowSize:   [35, 20], // width, height of optional shadow image
+    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+  })
+var IconD = L.icon({
+    iconUrl: 'locoD.svg',
+    iconSize:     [25, 38], // width and height of the image in pixels
+    shadowSize:   [35, 20], // width, height of optional shadow image
+    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+  })
+var IconF = L.icon({
+    iconUrl: 'locoF.svg',
+    iconSize:     [25, 38], // width and height of the image in pixels
+    shadowSize:   [35, 20], // width, height of optional shadow image
+    popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
+  })
 
 for (i in ligne_metro.features){
   if (ligne_metro.features[i].properties.sens == 'Aller' ){
@@ -154,8 +185,6 @@ L.control.layers (baseLayers, overlays). addTo(map);
 
 metro.bringToFront()
 station_layer.bringToBack()
-
-
 
 
 
